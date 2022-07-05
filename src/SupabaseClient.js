@@ -1,6 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+const SUPABASE_URL = process.env.SUPABASE_API_URL;
+const SUPABASE_TOKEN = process.env.SUPABASE_TOKEN;
 
-export const supabase = createClient(
-    'https://isniioqbkuphosivxzer.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlzbmlpb3Fia3VwaG9zaXZ4emVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTY2MjkzNjQsImV4cCI6MTk3MjIwNTM2NH0.Z1fah8-OBHPLoy0dBk5lz5Z0LJ0h78wruYfTyRSxBW0'
-);
+export const supabase = createClient(SUPABASE_URL, SUPABASE_TOKEN);

@@ -1,4 +1,3 @@
-import { Divider } from '@mui/material';
 import {
     Page,
     Text,
@@ -6,7 +5,6 @@ import {
     StyleSheet,
     Font,
     View,
-    Image,
 } from '@react-pdf/renderer';
 import { Video } from '../../interfaces/Video.Interface';
 

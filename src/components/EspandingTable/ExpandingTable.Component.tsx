@@ -17,8 +17,6 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { supabase } from '../../SupabaseClient';
 import { Video } from '../../interfaces/Video.Interface';
@@ -26,49 +24,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Button, Collapse, Grid, TextField } from '@mui/material';
 import useStyles from './ExpandingTable.Style';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { withStyles } from '@mui/styles';
-// import { PDFDownloadLink } from '@react-pdf/renderer';
 import { MyDocument } from '../MyDocument/MyDocument.Component';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-
-const exampleData: Video[] = [
-    {
-        clasedescripcion: 'DEPORTES',
-        codigo: 149,
-        descripcion:
-            'FUTBOL MUNDIAL 94 EE UU ARGENTINA- NIGERIA- MARADONA DOPING',
-        duracion: '02:30:00',
-        estado: 'SI',
-        fecha: '25/6/1994',
-        id: 1891,
-        normadescripcion: 'VHS',
-        nota: 1,
-        observacion: 'RESUMEN TODO MUNDIAL 94',
-        personaje1: 'MARADONA CLIP MATADOR  DOPING',
-        personaje2: 'RESUMEN VARIOS PARTIDOS Y TODO MARADONA',
-        personaje3: 'CLIP APERTURA LA TRAVIATA DOMINGO PAVAROTTI',
-        personaje4: 'CARRERAS',
-    },
-    {
-        clasedescripcion: 'DEPORTES',
-        codigo: 149,
-        descripcion:
-            'FUTBOL MUNDIAL 94 EE UU ARGENTINA- NIGERIA- MARADONA DOPING',
-        duracion: '02:30:00',
-        estado: 'SI',
-        fecha: '25/6/1994',
-        id: 1891,
-        normadescripcion: 'VHS',
-        nota: 1,
-        observacion: 'RESUMEN TODO MUNDIAL 94',
-        personaje1: 'MARADONA CLIP MATADOR  DOPING',
-        personaje2: 'RESUMEN VARIOS PARTIDOS Y TODO MARADONA',
-        personaje3: 'CLIP APERTURA LA TRAVIATA DOMINGO PAVAROTTI',
-        personaje4: 'CARRERAS',
-    },
-];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -217,7 +176,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                         indeterminate={
                             numSelected > 0 && numSelected < rowCount
                         }
-                        // indeterminateIcon={<IndeterminateCheckBoxIcon className={classes.root} />}
                         checked={rowCount > 0 && numSelected === rowCount}
                         onChange={onSelectAllClick}
                         inputProps={{
