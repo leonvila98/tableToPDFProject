@@ -22,12 +22,21 @@ import { supabase } from '../../SupabaseClient';
 import { Video } from '../../interfaces/Video.Interface';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { Button, Collapse, Grid, TextField } from '@mui/material';
+import {
+    Button,
+    CircularProgress,
+    Collapse,
+    createTheme,
+    Grid,
+    TextField,
+} from '@mui/material';
 import useStyles from './ExpandingTable.Style';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { withStyles } from '@mui/styles';
 import { MyDocument } from '../MyDocument/MyDocument.Component';
 import { PDFDownloadLink } from '@react-pdf/renderer';
+import { blue } from '@mui/material/colors';
+import { LoadingButton } from '@mui/lab';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -230,6 +239,7 @@ interface EnhancedTableToolbarProps {
     videos: Video[];
     selected: readonly number[];
     fetchData: (text: string) => void;
+    isLoading: boolean;
 }
 
 const CssTextField = withStyles({
@@ -254,8 +264,17 @@ const CssTextField = withStyles({
     },
 })(TextField);
 
+const theme = createTheme({
+    palette: {
+        primary: blue,
+        secondary: {
+            main: '#232323',
+        },
+    },
+});
+
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
-    const { numSelected, videos, selected, fetchData } = props;
+    const { numSelected, videos, selected, fetchData, isLoading } = props;
     const [selectedVideos, setSelectedVideos] = React.useState<Video[]>([]);
     const [searchingText, setSearchingText] = React.useState<string>('');
 
@@ -301,20 +320,27 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
                 value={searchingText}
             />
             <Button
-                style={{
-                    // borderRadius: 35,
-                    backgroundColor: '#232323',
-                    // padding: '18px 36px',
-                    // fontSize: '18px',
-                    margin: '15px',
-                }}
+                style={
+                    isLoading
+                        ? { margin: '15px' }
+                        : {
+                              backgroundColor: '#232323',
+                              margin: '15px',
+                          }
+                }
                 variant='contained'
                 onClick={() => {
                     fetchData(searchingText);
                 }}
+                disabled={isLoading}
             >
                 Buscar
             </Button>
+            {isLoading && (
+                <div>
+                    <CircularProgress color='inherit' />
+                </div>
+            )}
             {numSelected > 0 ? (
                 <Typography
                     sx={{ flex: '1 1 100%', marginLeft: '20px' }}
@@ -518,20 +544,20 @@ export default function EnhancedTable() {
     const [selected, setSelected] = React.useState<readonly number[]>([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [isLoading, setLoading] = React.useState<boolean>(false);
 
     const [videos, setVideos] = React.useState<any[]>([]);
 
     const fetchVideos = async (search: string) => {
-        // setLoading(true);
+        setLoading(true);
         await supabase
             .rpc('search_posts', {
                 keyword: search,
             })
             .then(({ data }: any) => {
                 setVideos(data);
-                // setLoading(false);
-                console.log('|fetch', data);
+                setLoading(false);
             });
     };
 
@@ -604,6 +630,7 @@ export default function EnhancedTable() {
                     videos={videos}
                     selected={selected}
                     fetchData={fetchVideos}
+                    isLoading={isLoading}
                 />
                 <TableContainer>
                     <Table
