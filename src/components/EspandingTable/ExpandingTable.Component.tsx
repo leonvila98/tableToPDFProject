@@ -7,8 +7,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import { supabase } from '../../SupabaseClient';
 import { Video } from '../../interfaces/Video.Interface';
 import { Row } from '../Row/Row.Component';
@@ -67,13 +65,14 @@ export default function EnhancedTable() {
 
     const [videos, setVideos] = React.useState<any[]>([]);
 
-    const fetchVideos = async (search: string) => {
+    const fetchVideos = async (search: string, norma: string) => {
         setLoading(true);
         await supabase
-            .rpc('search_posts', {
+            .rpc('search_videos', {
                 keyword: search,
+                searchednorma: norma,
             })
-            .then(({ data }: any) => {
+            .then(({ data, error }: any) => {
                 setVideos(data);
                 setLoading(false);
             });

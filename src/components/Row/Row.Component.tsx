@@ -18,7 +18,7 @@ export function Row(props: {
         codigo: string | number;
         nota: string | number;
         descripcion: string | number;
-        fecha: string | number;
+        fecha: string | number | Date;
         duracion: string | number;
         observacion: string | number;
         norma: string | number;

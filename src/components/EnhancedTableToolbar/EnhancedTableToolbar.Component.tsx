@@ -11,12 +11,16 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 import React from 'react';
 import { Video } from '../../interfaces/Video.Interface';
 import { MyDocument } from '../MyDocument/MyDocument.Component';
+import { SelectNorma } from '../SelectNorma/SelectNorma.Component';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 interface EnhancedTableToolbarProps {
     numSelected: number;
     videos: Video[];
     selected: readonly number[];
-    fetchData: (text: string) => void;
+    fetchData: (text: string, norma: string) => void;
     isLoading: boolean;
     allSelected: boolean;
 }
@@ -44,8 +48,11 @@ const CssTextField = withStyles({
 })(TextField);
 
 export const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
+    // const normas = ['VHS', 'UM', 'DVD', 'BETA', 'PULGADA', 'PC'];
     const { numSelected, videos, selected, fetchData, isLoading, allSelected } =
         props;
+    const [norma, setNorma] = React.useState<string>('BETA');
+    const [date, setDate] = React.useState<Date | null>(null);
     const [selectedVideos, setSelectedVideos] = React.useState<Video[]>([]);
     const [searchingText, setSearchingText] = React.useState<string>('');
     const [documentGenerated, setDocumentGenerated] =
@@ -65,6 +72,10 @@ export const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
 
     const handleDownloaded = () => {
         setTimeout(handleDocumentGenerated, 500);
+    };
+
+    const handleDate = (newValue: Date | null) => {
+        setDate(newValue);
     };
 
     return (
@@ -111,7 +122,7 @@ export const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
                 }
                 variant='contained'
                 onClick={() => {
-                    fetchData(searchingText);
+                    fetchData(searchingText, norma);
                 }}
                 disabled={isLoading}
             >
@@ -140,6 +151,29 @@ export const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
                 ></Typography>
             )}
 
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                    label='Basic example'
+                    value={date}
+                    onChange={(newValue) => {
+                        handleDate(newValue);
+                    }}
+                    views={['year', 'month', 'day']}
+                    // format='DD-MM-YYYY'
+                    renderInput={(params) => (
+                        <TextField
+                            sx={{
+                                width: 800,
+                                maxWidth: '100%',
+                            }}
+                            {...params}
+                        />
+                    )}
+                />
+            </LocalizationProvider>
+
+            <SelectNorma setNormaParent={setNorma} />
+
             {numSelected > 0 || allSelected ? (
                 !documentGenerated ? (
                     <Button
@@ -163,7 +197,7 @@ export const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
                         style={{ textDecoration: 'none' }}
                         className='btn btn-primary'
                     >
-                        {({ blob, url, loading, error }) =>
+                        {({ loading }) =>
                             loading ? (
                                 <CircularProgress color='inherit' />
                             ) : (
