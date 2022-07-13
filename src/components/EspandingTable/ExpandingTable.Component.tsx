@@ -65,14 +65,22 @@ export default function EnhancedTable() {
 
     const [videos, setVideos] = React.useState<any[]>([]);
 
-    const fetchVideos = async (search: string, norma: string) => {
+    const fetchVideos = async (
+        search: string,
+        norma: string,
+        datefrom: string | null,
+        dateto: string | null
+    ) => {
         setLoading(true);
         await supabase
-            .rpc('search_videos', {
+            .rpc('search_videos_2', {
                 keyword: search,
                 searchednorma: norma,
+                datefrom: datefrom,
+                dateto: dateto,
             })
             .then(({ data, error }: any) => {
+                console.log('|error', error);
                 setVideos(data);
                 setLoading(false);
             });

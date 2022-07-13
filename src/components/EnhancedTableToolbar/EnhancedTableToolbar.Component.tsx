@@ -15,17 +15,23 @@ import { SelectNorma } from '../SelectNorma/SelectNorma.Component';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import moment from 'moment';
 
 interface EnhancedTableToolbarProps {
     numSelected: number;
     videos: Video[];
     selected: readonly number[];
-    fetchData: (text: string, norma: string) => void;
+    fetchData: (
+        text: string,
+        norma: string,
+        dateFrom: string | null,
+        dateTo: string | null
+    ) => void;
     isLoading: boolean;
     allSelected: boolean;
 }
 
-const CssTextField = withStyles({
+export const CssTextField = withStyles({
     root: {
         '& label.Mui-focused': {
             color: '#232323',
@@ -44,6 +50,7 @@ const CssTextField = withStyles({
                 borderColor: '#232323',
             },
         },
+        marginRight: '10px',
     },
 })(TextField);
 
@@ -52,7 +59,8 @@ export const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     const { numSelected, videos, selected, fetchData, isLoading, allSelected } =
         props;
     const [norma, setNorma] = React.useState<string>('BETA');
-    const [date, setDate] = React.useState<Date | null>(null);
+    const [dateFrom, setDateFrom] = React.useState<string | null>(null);
+    const [dateTo, setDateTo] = React.useState<string | null>(null);
     const [selectedVideos, setSelectedVideos] = React.useState<Video[]>([]);
     const [searchingText, setSearchingText] = React.useState<string>('');
     const [documentGenerated, setDocumentGenerated] =
@@ -74,8 +82,14 @@ export const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
         setTimeout(handleDocumentGenerated, 500);
     };
 
-    const handleDate = (newValue: Date | null) => {
-        setDate(newValue);
+    const handleDateFrom = (dateFrom: string | null) => {
+        let newDate = moment(dateFrom?.toString()).format('YYYYMMDD');
+        setDateFrom(dateFrom);
+    };
+
+    const handleDateTo = (dateTo: string | null) => {
+        let newDate = moment(dateTo?.toString()).format('YYYYMMDD');
+        setDateTo(dateTo);
     };
 
     return (
@@ -122,7 +136,16 @@ export const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
                 }
                 variant='contained'
                 onClick={() => {
-                    fetchData(searchingText, norma);
+                    fetchData(
+                        searchingText,
+                        norma,
+                        dateFrom !== null
+                            ? moment(dateFrom?.toString()).format('yyyyMMDD')
+                            : null,
+                        dateTo !== null
+                            ? moment(dateTo?.toString()).format('yyyyMMDD')
+                            : null
+                    );
                 }}
                 disabled={isLoading}
             >
@@ -151,22 +174,54 @@ export const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
                 ></Typography>
             )}
 
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <LocalizationProvider
+                dateAdapter={AdapterDateFns}
+                style={{ marginRight: 16 }}
+            >
                 <DatePicker
-                    label='Basic example'
-                    value={date}
+                    label='Desde'
+                    value={dateFrom}
                     onChange={(newValue) => {
-                        handleDate(newValue);
+                        handleDateFrom(newValue);
                     }}
-                    views={['year', 'month', 'day']}
-                    // format='DD-MM-YYYY'
+                    inputFormat='dd/MM/yyyy'
                     renderInput={(params) => (
-                        <TextField
+                        <CssTextField
+                            margin='normal'
+                            inputProps={{
+                                style: { color: '#232323' },
+                            }}
                             sx={{
                                 width: 800,
                                 maxWidth: '100%',
                             }}
                             {...params}
+                            defaultValue={null}
+                        />
+                    )}
+                />
+            </LocalizationProvider>
+
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                    label='Hasta'
+                    value={dateTo}
+                    onChange={(newValue) => {
+                        handleDateTo(newValue);
+                    }}
+                    inputFormat='dd/MM/yyyy'
+                    renderInput={(params) => (
+                        <CssTextField
+                            margin='normal'
+                            inputProps={{
+                                style: { color: '#232323' },
+                            }}
+                            sx={{
+                                width: 800,
+                                maxWidth: '100%',
+                            }}
+                            {...params}
+                            defaultValue={null}
                         />
                     )}
                 />
@@ -180,7 +235,8 @@ export const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
                         style={{
                             backgroundColor: '#232323',
                             margin: '15px',
-                            width: '220px',
+                            width: '500px',
+                            padding: '-30px',
                         }}
                         variant='contained'
                         onClick={handleDocumentGenerated}
@@ -205,7 +261,8 @@ export const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
                                     style={{
                                         backgroundColor: '#232323',
                                         margin: '15px',
-                                        width: '220px',
+                                        width: '200px',
+                                        padding: '-30px',
                                     }}
                                     variant='contained'
                                     onClick={handleDownloaded}

@@ -11,6 +11,7 @@ import React from 'react';
 import useStyles from '../EspandingTable/ExpandingTable.Style';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import moment from 'moment';
 
 export function Row(props: {
     row: {
@@ -92,7 +93,9 @@ export function Row(props: {
                 <TableCell align='left'>{row.observacion}</TableCell>
                 <TableCell align='left'>{row.clasedescripcion}</TableCell>
                 <TableCell align='left'>{row.personaje1}</TableCell>
-                <TableCell align='left'>{row.fecha}</TableCell>
+                <TableCell align='left'>
+                    {moment(row.fecha).format('DD/MM/YYYY')}
+                </TableCell>
                 <TableCell align='left'>{row.duracion}</TableCell>
                 <TableCell align='left'>{row.estado}</TableCell>
             </TableRow>

@@ -6,6 +6,7 @@ import {
     Font,
     View,
 } from '@react-pdf/renderer';
+import moment from 'moment';
 import { Video } from '../../interfaces/Video.Interface';
 
 interface MyDocumentProps {
@@ -90,7 +91,9 @@ const TwoColumnLayout: React.FC<ColumnLayoutProps> = ({ video }) => (
             </View>
             <View style={{ flexDirection: 'column' }}>
                 <Text style={styles.reportTitle}>fecha</Text>
-                <Text style={styles.text}>{video.fecha}</Text>
+                <Text style={styles.text}>
+                    {moment(video.fecha?.toString()).format('DD/MM/YYYY')}
+                </Text>
             </View>
             <View style={{ flexDirection: 'column' }}>
                 <Text style={styles.reportTitle}>duracion</Text>

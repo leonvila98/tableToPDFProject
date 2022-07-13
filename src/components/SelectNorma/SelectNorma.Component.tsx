@@ -24,14 +24,29 @@ export const SelectNorma = (props: SelectNormaProps) => {
 
     return (
         <Box sx={{ minWidth: 120 }}>
-            <FormControl fullWidth>
-                <InputLabel id='demo-simple-select-label'>Norma</InputLabel>
+            <FormControl fullWidth margin='normal'>
+                <InputLabel
+                    id='demo-simple-select-label'
+                    sx={{
+                        '&.Mui-focused': {
+                            color: '#232323',
+                        },
+                    }}
+                    // .Mui-focused .MuiOutlinedInput-notchedOutline
+                >
+                    Norma
+                </InputLabel>
                 <Select
                     labelId='demo-simple-select-label'
                     id='demo-simple-select'
                     value={norma}
                     label='Norma'
                     onChange={handleChange}
+                    sx={{
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderColor: '#232323',
+                        },
+                    }}
                 >
                     <MenuItem value={'TODAS'}>TODAS</MenuItem>
                     <MenuItem value={'BETA'}>BETA</MenuItem>
